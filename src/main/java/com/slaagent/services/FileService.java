@@ -94,8 +94,8 @@ public class FileService {
     public void downloadFileByURL(String urlString, String path, String fileName) {
         
         byte[] data = null;
-        int len = 1024 * 300; // 300 KB
-
+        int len = Integer.parseInt(PropertiesService.getInstance().getProperties().getProperty("file.download.size"));
+        System.out.println("max file size to be downloaded = " + len + " KB");
         try {
             URL url = new URL(urlString);
             URLConnection uc = url.openConnection();
