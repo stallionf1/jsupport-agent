@@ -33,7 +33,7 @@ public class WeeklyJiraHostersReport {
     
     public void sendFridaysReport() {
         String pathToReports = properties.getProperty("reports.location");
-        String messageBody = "Hello Dmitry, <br/>This is a weekly emails which contains: <b>JIRA ticket reports by hoster</b> <br/ >Please see .html files in the attachment.";
+        String messageBody = "Hello Dmitry, <br/>Find gzipped reports in the attachments<b>";
         Calendar sDateCalendar = new GregorianCalendar();
         int weekNumber = sDateCalendar.get(Calendar.WEEK_OF_YEAR);
 
