@@ -16,11 +16,12 @@ import java.nio.charset.Charset;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.zip.GZIPOutputStream;
 
 public class FileService {
 
     private static PropertiesService properties = PropertiesService.getInstance();
-    
+
     public FileService() {
     }
 
@@ -92,7 +93,7 @@ public class FileService {
     }
 
     public void downloadFileByURL(String urlString, String path, String fileName) {
-        
+
         byte[] data = null;
         int len = Integer.parseInt(PropertiesService.getInstance().getProperties().getProperty("file.download.size"));
         System.out.println("max file size to be downloaded = " + len + " KB");
@@ -100,7 +101,7 @@ public class FileService {
             URL url = new URL(urlString);
             URLConnection uc = url.openConnection();
             InputStream is = new BufferedInputStream(uc.getInputStream());
-            
+
             try {
                 data = new byte[len];
                 int offset = 0;
@@ -117,12 +118,36 @@ public class FileService {
                 if (os.toLowerCase().contains("windows")) {
                     delimiter = "\\";
                 }
-                FileOutputStream fos = new FileOutputStream(path+delimiter+fileName);
+                FileOutputStream fos = new FileOutputStream(path + delimiter + fileName);
                 fos.write(data);
                 fos.close();
             } finally {
                 is.close();
             }
+        } catch (IOException ex) {
+            Logger.getLogger(FileService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void compressFile(String infile, String outfile) {
+        try {
+            System.out.println("Compressing " + infile + " to " + outfile);
+            long byteCount = 0;
+
+            FileInputStream in = new FileInputStream(infile);
+            GZIPOutputStream out = new GZIPOutputStream(new FileOutputStream(outfile));
+
+            byte[] buf = new byte[16000];
+            int read;
+            while ((read = in.read(buf)) != -1) {
+                out.write(buf, 0, read);
+                byteCount += read;
+            }
+            in.close();
+            out.close();
+            System.out.println("read " + byteCount + " bytes");
+            File zipped = new File(outfile);
+            System.out.println("wrote " + zipped.length() + " bytes");
         } catch (IOException ex) {
             Logger.getLogger(FileService.class.getName()).log(Level.SEVERE, null, ex);
         }
