@@ -52,7 +52,7 @@ public class WeeklyJiraHostersReport {
                 String hosterName = rs.getString(3);
                 FileService fs = new FileService();
                 String fileName = hosterName + "-week-" + weekNumber + ".html";
-                String gzippedFileName = fileName + ".zip";
+                String gzippedFileName = fileName + ".gzip";
                 fs.downloadFileByURL(filterUrl, pathToReports, fileName);
                 
                 //file compressing
